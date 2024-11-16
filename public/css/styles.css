@@ -1,0 +1,56 @@
+body {
+    color: #333333;
+    font-family: arial;
+    max-width: 650px;
+    margin: 0 auto; /* első érték a függőleges, a második a vízszintes*/
+    padding: 0 16px;
+
+    display: flex; /*flex box style*/
+    flex-direction: column;
+    min-height: 100vh; /*100% viewport height*/
+}
+
+.main-content {
+    flex-grow: 1; /*1= content should take all remaining space*/
+}
+
+footer {
+   color: #888888;
+   border-top: 1px solid #eeeeee;
+   margin-top: 16px;
+   padding: 16px 0;
+}
+
+header {
+    margin-top: 16px;
+    margin-bottom: 48px;
+
+}
+
+h1 {
+    font-size: 64px;
+    margin-bottom: 16px;
+}
+
+header a { /*targets the links in the header*/
+    color: #888888;
+    margin-right: 16px;
+    text-decoration: none; /*removes the underline*/
+}
+
+.portrait {
+    width: 250px;
+}
+
+input {
+    border: 1px solid #cccccc;
+    padding: 8px;
+}
+
+button {
+    cursor: pointer;
+    border: 1px solid #888888;
+    background: #888888;
+    color: white;
+    padding: 8px;
+}
