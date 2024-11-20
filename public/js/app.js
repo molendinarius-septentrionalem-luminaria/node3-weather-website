@@ -5,7 +5,7 @@ const messageTwo = document.querySelector('#message-2')
 
 // messageOne.textContent = 'From JavaScript'
 
-weatherForm.addEventListener('submit', (e) =>{
+weatherForm.addEventListener('submit', (e) => {
     e.preventDefault()
 
     const location = search.value
@@ -13,6 +13,7 @@ weatherForm.addEventListener('submit', (e) =>{
     messageOne.textContent = 'Loading...'
     messageTwo.textContent = ''
 
+    fetch('/weather?address=' + location).then((response) => {
         console.log(response)
         // if (!response.ok){
         //     console.log('Network response was not ok' + response.statusText)
