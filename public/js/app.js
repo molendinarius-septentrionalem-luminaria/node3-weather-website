@@ -13,7 +13,6 @@ weatherForm.addEventListener('submit', (e) =>{
     messageOne.textContent = 'Loading...'
     messageTwo.textContent = ''
 
-    fetch('http://localhost:3000/weather?address=' + location).then((response) => {
         console.log(response)
         // if (!response.ok){
         //     console.log('Network response was not ok' + response.statusText)
