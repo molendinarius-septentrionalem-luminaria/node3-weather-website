@@ -24,7 +24,7 @@ const request = require('request')
 // module.exports = forecast
 
 const forecast = (latitude, longitude, callback) => {
-    const url = 'https://api.open-meteo.com/v1/forecast?latitude=' + latitude + '&longitude=' + longitude + '&current=temperature_2m,cloud_cover&hourly=precipitation_probability'
+    const url = 'https://api.open-meteo.com/v1/forecast?latitude=' + latitude + '&longitude=' + longitude + '&current=temperature_2m,cloud_cover&hourly=precipitation_probability&daily=temperature_2m_max,temperature_2m_min,snowfall_sum,wind_speed_10m_max'
     request ({ url, json: true }, (error, { body }) =>{
         if (error) {
             callback('Unable to connect to weather service', undefined)
@@ -38,7 +38,14 @@ const forecast = (latitude, longitude, callback) => {
                 + body.current_units.temperature_2m + '. There is '
                 + body.hourly.precipitation_probability[0]
                 + '% chance to rain. Cloud cover is '
-                + body.current.cloud_cover + '%.')
+                + body.current.cloud_cover + '%.'
+                + ' Today: minimum temparature is ' + body.daily.temperature_2m_min[0]
+                + body.daily_units.temperature_2m_min + ' and the maximum is ' 
+                + body.daily.temperature_2m_max[0] + body.daily_units.temperature_2m_max + '.'
+                + ' Snowfall ' + body.daily.snowfall_sum[0] + body.daily_units.snowfall_sum + '.'
+                + ' Maximum wind speed ' + body.daily.wind_speed_10m_max[0] + body.daily_units.wind_speed_10m_max
+                + '.'
+            )
         }
     })
 }
