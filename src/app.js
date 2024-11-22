@@ -1,6 +1,8 @@
 const path = require('path')
 const express = require('express')
 const hbs = require('hbs')
+// Helper a JSON adatok átadásához
+hbs.registerHelper('json', (context) => JSON.stringify(context));
 
 const geocode = require('./utils/geocode')
 const forecast = require('./utils/forecast')
@@ -21,10 +23,50 @@ hbs.registerPartials(partialsPaths)
 // Setup static directory to serve
 app.use(express.static(publicDirectoryPath))
 
+const fs = require('fs');
+
+const saveSearch = (address) => {
+    const filePath = './search.json'; // A fájl neve, ahol mented a kereséseket
+    let searches = [];
+
+    try {
+        const dataBuffer = fs.readFileSync(filePath);
+        searches = JSON.parse(dataBuffer.toString());
+    } catch (e) {
+        // Ha a fájl nem létezik, üres tömböt használunk
+    }
+
+    // Ha az address már szerepel, töröld az ismétlést
+    searches = searches.filter(search => search !== address);
+
+    // Tedd az új keresést a lista elejére
+    searches.unshift(address);
+
+    // Tartsd meg az utolsó 5 keresést
+    if (searches.length > 5) {
+        searches = searches.slice(0, 5);
+    }
+
+    // Írd vissza a frissített listát a fájlba
+    fs.writeFileSync(filePath, JSON.stringify(searches));
+};
+
 app.get('', (req, res) => {
+    let searches = [];
+
+    try {
+         // Beolvassuk a keresési adatokat
+        const dataBuffer = fs.readFileSync('./search.json');
+        searches = JSON.parse(dataBuffer.toString());
+    } catch (e) {
+        // Ha nincs fájl, hagyjuk üresen a keresési listát
+        searches = []
+    }
+    // Az adatok továbbítása az index.hbs-nek
     res.render('index', {
         title: 'Weather App',
-        name: 'Norbert Molnar'
+        name: 'Norbert Molnar',
+        searches // Az index.hbs megkapja a kereséseket
     })
 })
 
@@ -58,10 +100,23 @@ app.get('/weather', (req, res) => {
                     if (error) {
                         res.send({ error })
                     } else {
+                        saveSearch(req.query.address); // Mentjük a keresést
+                        
+                        // Beolvassuk az új keresési listát
+                        let searches = [];
+                        try {
+                            const dataBuffer = fs.readFileSync('./search.json');
+                            searches = JSON.parse(dataBuffer.toString());
+                        } catch (e) {
+                            searches = [];
+                        }
+                        
+                        // Visszaküldjük az adatokat + frissített keresési listát
                         res.send({
                             forecast: forecastData,
                             location,
-                            address: req.query.address                            
+                            address: req.query.address,
+                            searches                            
                         })
                     }
                 })

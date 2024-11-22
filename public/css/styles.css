@@ -54,3 +54,17 @@ button {
     color: white;
     padding: 8px;
 }
+
+#recent-searches li {
+    margin: 5px 0;
+}
+
+#recent-searches a {
+    color: #007bff;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+#recent-searches a:hover {
+    text-decoration: underline;
+}
